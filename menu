@@ -1,0 +1,140 @@
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.window import Window
+from kivy.clock import Clock
+
+# Set the screen size for 480x320
+Window.size = (480, 320)
+Window.fullscreen = True
+
+
+class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.create_layout()
+
+    def create_layout(self):
+        # Create GridLayout with 2 rows and 3 columns
+        layout = GridLayout(rows=2, cols=3, spacing=5, padding=10)
+        self.add_widget(layout)
+
+        # Buttons for MainScreen
+        self.yellow_button = Button(text="Yellow", font_size=20)
+        self.green_button = Button(text="Green", font_size=20)
+        self.red_button = Button(text="Red", font_size=20)
+        self.clear_button = Button(text="Clear", font_size=20)
+        self.oz_button = Button(text="1.5oz", font_size=20)
+        self.menu_button = Button(text="Menu", font_size=20)
+
+        # Bind buttons to methods
+        self.yellow_button.bind(on_press=lambda x: self.pour("Yellow"))
+        self.green_button.bind(on_press=lambda x: self.pour("Green"))
+        self.red_button.bind(on_press=lambda x: self.pour("Red"))
+        self.clear_button.bind(on_press=lambda x: self.pour("Clear"))
+        self.oz_button.bind(on_press=self.change_oz)
+        self.menu_button.bind(on_press=self.go_to_menu)
+
+        # Add buttons to the grid layout
+        layout.add_widget(self.yellow_button)
+        layout.add_widget(self.green_button)
+        layout.add_widget(self.red_button)
+        layout.add_widget(self.clear_button)
+        layout.add_widget(self.oz_button)
+        layout.add_widget(self.menu_button)
+
+        # State for oz_button
+        self.oz_states = ["1.5oz", "2.5oz", "4oz"]
+        self.oz_index = 0
+
+    def pour(self, color):
+        # Transition to PourScreen and set message
+        self.manager.current = "pour"
+        pour_screen = self.manager.get_screen("pour")
+        pour_screen.set_message(f"Pouring {color}")
+        Clock.schedule_once(self.return_to_main, 5)
+
+    def change_oz(self, instance):
+        self.oz_index = (self.oz_index + 1) % len(self.oz_states)
+        self.oz_button.text = self.oz_states[self.oz_index]
+        if self.oz_index == 0:  # Return to main when cycling back to the start
+            self.manager.current = "main"
+
+    def go_to_menu(self, instance):
+        self.manager.current = "menu"
+
+    def return_to_main(self, dt):
+        self.manager.current = "main"
+
+
+class MenuScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.create_layout()
+
+    def create_layout(self):
+        # Create GridLayout with 2 rows and 3 columns
+        layout = GridLayout(rows=2, cols=3, spacing=5, padding=10)
+        self.add_widget(layout)
+
+        # Buttons for MenuScreen
+        self.drink_a_button = Button(text="Drink A", font_size=20)
+        self.drink_b_button = Button(text="Drink B", font_size=20)
+        self.drink_c_button = Button(text="Drink C", font_size=20)
+        self.drink_d_button = Button(text="Drink D", font_size=20)
+        self.wash_button = Button(text="WASH", font_size=20)
+        self.back_button = Button(text="Back", font_size=20)
+
+        # Bind buttons to methods
+        self.drink_a_button.bind(on_press=lambda x: self.pour("Drink A"))
+        self.drink_b_button.bind(on_press=lambda x: self.pour("Drink B"))
+        self.drink_c_button.bind(on_press=lambda x: self.pour("Drink C"))
+        self.drink_d_button.bind(on_press=lambda x: self.pour("Drink D"))
+        self.wash_button.bind(on_press=lambda x: self.pour("WASH"))
+        self.back_button.bind(on_press=self.go_back)
+
+        # Add buttons to the grid layout
+        layout.add_widget(self.drink_a_button)
+        layout.add_widget(self.drink_b_button)
+        layout.add_widget(self.drink_c_button)
+        layout.add_widget(self.drink_d_button)
+        layout.add_widget(self.wash_button)
+        layout.add_widget(self.back_button)
+
+    def pour(self, drink):
+        self.manager.current = "pour"
+        pour_screen = self.manager.get_screen("pour")
+        pour_screen.set_message(f"Pouring {drink}")
+        Clock.schedule_once(self.return_to_main, 5)
+
+    def go_back(self, instance):
+        self.manager.current = "main"
+
+    def return_to_main(self, dt):
+        self.manager.current = "main"
+
+
+class PourScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.layout = GridLayout(rows=1, cols=1, padding=10)
+        self.message_button = Button(text="", font_size=20)
+        self.layout.add_widget(self.message_button)
+        self.add_widget(self.layout)
+
+    def set_message(self, message):
+        self.message_button.text = message
+
+
+class MyApp(App):
+    def build(self):
+        sm = ScreenManager()
+        sm.add_widget(MainScreen(name="main"))
+        sm.add_widget(MenuScreen(name="menu"))
+        sm.add_widget(PourScreen(name="pour"))
+        return sm
+
+
+if __name__ == "__main__":
+    MyApp().run()
