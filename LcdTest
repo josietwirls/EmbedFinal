@@ -1,0 +1,68 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.window import Window
+
+# Set the window size for 480x320 screen
+Window.size = (480, 320)
+Window.fullscreen = True
+
+
+class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.create_layout()
+
+    def create_layout(self):
+        # Main layout
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        
+        # Button 1: "PRESS FOR JOKE"
+        self.button1 = Button(
+            text="PRESS FOR JOKE",
+            font_size=20,
+            size_hint=(1, 0.45)
+        )
+        self.button1.bind(on_press=self.show_joke)
+        self.layout.add_widget(self.button1)
+        
+        # Button 2: Initially says nothing
+        self.button2 = Button(
+            text="",
+            font_size=20,
+            size_hint=(1, 0.45)
+        )
+        self.layout.add_widget(self.button2)
+
+        self.add_widget(self.layout)
+
+    def show_joke(self, instance):
+        # Change button1 text and button2 behavior
+        self.button1.text = "WHAT IS RED AND SMELLS LIKE BLUE PAINT"
+        self.button2.text = "WHAT?"
+        self.button2.unbind(on_press=self.reset_screen)  # Ensure no previous binding
+        self.button2.bind(on_press=self.reveal_punchline)
+
+    def reveal_punchline(self, instance):
+        # Button1 shows punchline, button2 changes to exit
+        self.button1.text = "RED PAINT"
+        self.button2.text = "LAME..EXIT HERE"
+        self.button2.unbind(on_press=self.reveal_punchline)  # Ensure no previous binding
+        self.button2.bind(on_press=self.reset_screen)
+
+    def reset_screen(self, instance):
+        # Reset both buttons to original state
+        self.button1.text = "PRESS FOR JOKE"
+        self.button2.text = ""
+
+
+class MyApp(App):
+    def build(self):
+        sm = ScreenManager()
+        sm.add_widget(MainScreen(name="main"))
+        return sm
+
+
+if __name__ == "__main__":
+    MyApp().run()
