@@ -33,19 +33,6 @@ try:
 	    time.sleep(0.1)
 	    GPIO.output(pump4, False)
 			
-      for x in range(4):
-            GPIO.output(pump1, True)
-            time.sleep(0.05)
-            GPIO.output(pump1, False)
-	    GPIO.output(pump2, True)
-            time.sleep(0.05)
-            GPIO.output(pump2, False)
-            GPIO.output(pump3, True)
-            time.sleep(0.05)
-            GPIO.output(pump3, False)
-            GPIO.output(pump4, True)
-            time.sleep(0.05)
-            GPIO.output(pump4, False)
 
 
 
