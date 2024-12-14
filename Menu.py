@@ -29,9 +29,9 @@ PORTION_SIZES = {
 # Mixed Drink Recipes
 MIXED_DRINKS = {
     DRINK_LABELS[0]: [(2, "4oz"), (3, "4oz"), (0, "4oz")],  # Sunset Refresher
-    DRINK_LABELS[1]: [(1, "4oz"), (0, "4oz"), (3, "1.5oz")],  # Arnold Palmer
+    DRINK_LABELS[1]: [(1, "4oz"), (0, "4oz")],  # Arnold Palmer
     DRINK_LABELS[2]: [(3, "4oz"), (2, "4oz"), (0, "1.5oz")],  # Cranberry Citrus Cooler
-    DRINK_LABELS[3]: [(1, "4oz"), (2, "4oz"), (0, "1.5oz"), (3, "1.5oz")]  # Tropical Tea Blend
+    DRINK_LABELS[3]: [(1, "2.5oz"), (2, "2.5oz"), (0, "2.5oz"), (3, "2.5oz")]  # Tropical Tea Blend
 }
 
 # WASH Cycle Duration (in seconds)
