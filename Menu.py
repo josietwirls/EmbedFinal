@@ -261,7 +261,7 @@ class PourScreen(Screen):
     def set_message(self, message):
         self.message_button.text = message
 
-class PumpApp(App):
+class CombineScreens(App):
     def build(self):
         sm = ScreenManager()
         sm.add_widget(StartScreen(name="start"))
@@ -273,7 +273,7 @@ class PumpApp(App):
 
 if __name__ == "__main__":
     try:
-        PumpApp().run()
+        CombineScreens().run()
     except KeyboardInterrupt:
         GPIO.cleanup()
     except Exception as e:
